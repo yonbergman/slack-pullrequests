@@ -1,27 +1,16 @@
 require 'octokit'
-TOKEN = ENV['GITHUB_TOKEN']
-REPOS = ['TheGiftsProject/teacup-server',
-         'TheGiftsProject/teacup-native',
-         'TheGiftsProject/teacup-peas']
-
-TRANSLATE_USER = {
-  'yonbergman' => 'yonbergman',
-  'sdavidson' => 'ShayDavidson',
-  'benny' => 'gardenofwine',
-  'assafgelber' => 'agelber',
-  'udi' => 'udiWertheimer',
-}
+require_relative './config'
 
 class Client
 
   attr_reader :client
 
   def initialize
-    @client = Octokit::Client.new(access_token: TOKEN)
+    @client = Octokit::Client.new(access_token: $config.github_token)
   end
 
   def need_work(for_user)
-    github_user = TRANSLATE_USER[for_user]
+    github_user = $config.users[for_user]
 
     output = []
     all_pull_requests.map do |repo, pull_requests|
@@ -43,7 +32,7 @@ class Client
 
   def all_pull_requests
     Hash[
-      REPOS.map do |repo_name|
+      $config.repos.map do |repo_name|
         [repo_name, for_repo(repo_name)]
       end
     ]
