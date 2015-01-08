@@ -21,7 +21,7 @@ class Client
         content += pull_requests.map {|pull|
           [
             "#{pull[:name]} by #{pull[:user]} - #{pull[:labels].join(", ")}",
-            pull[:url]
+            "<#{pull[:url]}>"
           ]
         }.flatten
         output << content.join("\n")
